@@ -1,0 +1,36 @@
+7.1-a) A relação está em 1FN, não há atributos compostos nem nested relations,
+e não está em 1FN devido à existencia de dependencias parciais (FD3).
+1-b)1FN->2FN todas as dependencias parciais dão origem a uma nova tabela neste caso a tabela L2(autor, filiaçao)
+	2FN->3FN todas as dependencias transitivas originam uma tabela nova (FD2 e FD3), neste caso essas tabelas são a L3(Tipo,Npaginas,preço) e L4(editor,endereçoeditor).
+7.2
+a) { A, B }
+b) {A,B,C}, {A,D,E,I,J}, {B,F,G,H}
+c) {A,B,C}, {A,D,E}, {B,F}, {F,G,H}, {D,I,J}
+
+7.3-a) Encontra se em 2FN com chave {A,B}
+	b)c) para decompor até 3FN é necessario criar uma nova tablea para FD3 que é uma dependencia transitiva. Após o ultimo passo para passar a BCNF é necessário criar uma nova relação R2{C,A}
+
+7.4
+a) { A,B }
+b) { A,B,C,D,E }, { A,C,D }
+c) { A,B,C,D,E }, { A,C }, { C,D }
+d) { A,B,C,E }, { A,C }, { C,D }
+
+7.5 a)
+CREATE VIEW pubs.titleauthors AS SELECT title, au_fname + ' ' + au_lname as au_name FROM pubs.dbo.titleauthor ta INNER JOIN pubs.dbo.authors au ON ta.au_id = au.au_id INNER JOIN pubs.dbo.titles tt ON tt.title_id = ta.title_id;
+CREATE VIEW pubs.pubemployees AS SELECT pub_name, fname + ' ' + lname as emp_name FROM pubs.dbo.employee em INNER JOIN pubs.dbo.publishers pub ON em.pub_id = pub.pub_id;
+CREATE VIEW pubs.shoptitles AS SELECT DISTINCT title, stor_name FROM pubs.dbo.sales sa INNER JOIN pubs.dbo.titles ti ON sa.title_id = ti.title_id INNER JOIN pubs.dbo.stores sh ON sh.stor_id = sa.stor_id;
+CREATE VIEW pubs.busbooks AS SELECT * FROM pubs.dbo.titles WHERE type = 'business';
+
+7.5-b)SELECT * FROM pubs.busbooks;
+SELECT * FROM pubs.pubemployees WHERE pub_name LIKE '%Books%';
+SELECT * FROM pubs.shoptitles;
+SELECT * FROM pubs.titleauthors WHERE title = 'Sushi, Anyone?';
+
+7.5c)
+ALTER VIEW pubs.shoptitles AS SELECT DISTINCT ti.title_id, title, stor_name FROM pubs.dbo.sales sa INNER JOIN pubs.dbo.titles ti ON sa.title_id = ti.title_id INNER JOIN pubs.dbo.stores sh ON sh.stor_id = sa.stor_id;
+ALTER VIEW pubs.titleauthors AS SELECT tt.title_id, title, au_fname + ' ' + au_lname as au_name FROM pubs.dbo.titleauthor ta INNER JOIN pubs.dbo.authors au ON ta.au_id = au.au_id INNER JOIN pubs.dbo.titles tt ON tt.title_id = ta.title_id;
+
+SELECT stor_name, au_name as author FROM pubs.titleauthors ta LEFT OUTER JOIN pubs.shoptitles st ON ta.title_id = st.title_id;
+
+7.5 d) i. Sim. A view usa apenas uma tabela e inclui todos os campos.

@@ -1,0 +1,46 @@
+5.1
+    a) π project.Pname, employee.Ssn, employee.Fname, employee.Minit, employee.Lname (works_on ⨝ Pnumber=Pno project ⨝ Essn=Ssn employee)
+    
+    b) π employee.Fname (σ super.Fname = 'Carlos' ∧ super.Minit = 'D' ∧ super.Lname = 'Gomes' (ρ employee employee ⟕ employee.Super_ssn = super.Ssn ρ super employee))
+    
+    c) gamma project.Pname;sum(works_on.Hours)->hours (project ⟖ project.Pnumber = works_on.Pno works_on ⟕ works_on.Essn=employee.Ssn employee)
+    
+    d) π employee.Fname σ project.Pname='Aveiro Digital' ∧ works_on.Hours>20 ∧ employee.Dno=3 ((project) ⟖ project.Pnumber = works_on.Pno (works_on) ⟕ works_on.Essn=employee.Ssn (employee))
+    
+    e) π employee.Fname σ works_on.Pno = null (employee ⟕ employee.Ssn=works_on.Essn works_on)
+    
+    f) gamma department.Dname;avg(employee.Salary)->avg_salary σ employee.Sex='F' (employee ⟕ employee.Dno=department.Dnumber department)
+    
+    g) π Fname σ num_dependents>2 (gamma employee.Fname;count(dependent.Dependent_name)->num_dependents (employee ⟖ employee.Ssn=dependent.Essn dependent))
+    
+    h) π employee.Fname σ num_dependents=0 (gamma employee.Fname,department.Dname;count(dependent.Dependent_name)->num_dependents (employee ⟕ employee.Ssn=dependent.Essn dependent ⨝ department.Mgr_ssn=employee.Ssn department))
+    
+    i) ρ employee_data (π employee.Ssn, employee.Fname, employee.Address σ project.Plocation = 'Aveiro' (π employee.Ssn,employee.Fname, employee.Address, project.Pname, project.Plocation (works_on ⨝ works_on.Essn=employee.Ssn employee ⨝ works_on.Pno=project.Pnumber project))) ⟖ employee_data.Ssn=employee.Ssn (π employee.Ssn σ dept_location.Dlocation ≠ 'Aveiro' (employee ⟕ employee.Dno=dept_location.Dnumber dept_location))
+
+
+
+5.2 a) 	π nif fornecedor - π fornecedor encomenda 
+
+
+    b)	temp= gamma codProd; avg(unidades) -> c item 
+	τ codProd asc temp
+
+    c)	temp= gamma numEnc; count(codProd) -> c item -- media de unidades por produto encomendado
+	gamma avg(c)-> average temp
+
+    d) 	temp = gamma encomenda.fornecedor,item.codProd; sum(item.unidades)-> unidades (π fornecedor,numero encomenda ⟖ encomenda.numero=item.numEnc item )
+	τ encomenda.fornecedor asc temp
+
+
+5.3 a)  π numUtente paciente - π numUtente prescricao
+    
+    b) 	gamma medico.especialidade; count(medico.numSNS)-> medi ( π especialidade,numSNS medico ⟖ medico.numSNS= prescricao.numMedico prescricao)
+
+    c) 	temp = σ farmacia!=null prescricao
+	gamma farmacia; count(numPresc)-> numP temp
+
+    d)  π nome σ numRegFarm=906 farmaco - π nomeFarmaco σ numRegFarm=906 presc_farmaco
+
+    e) gamma farmacia,numRegFarm ; count(numRegFarm)->num σ farmacia!=null (presc_farmaco ⨝ prescricao.numPresc= presc_farmaco.numPresc prescricao)
+
+    f)π numUtente σ Number>1 gamma numUtente; count(numMedico)->Number (π numUtente,numMedico prescricao) 

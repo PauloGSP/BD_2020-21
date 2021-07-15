@@ -1,0 +1,86 @@
+CREATE SCHEMA ATL;
+
+
+CREATE TABLE ATL.pessoa(
+	Numcc INT PRIMARY KEY NOT NULL,
+	Datanasc VARCHAR(8),
+	Nome VARCHAR(15),
+	Morada VARCHAR(15)
+);
+CREATE TABLE ATL.aluno(
+	NumCC INT PRIMARY KEY FOREIGN KEY (NumCC) REFERENCES ATL.pessoa(Numcc) NOT NULL
+
+);
+CREATE TABLE ATL.tipoPag(
+	id INT PRIMARY KEY NOT NULL,
+	designaçao VARCHAR(15)
+);
+CREATE TABLE ATL.escalao(
+	escalao INT PRIMARY KEY NOT NULL
+);
+CREATE TABLE ATL.estadoFina(
+	NumCC INT PRIMARY KEY FOREIGN KEY (NumCC) REFERENCES ATL.aluno(Numcc) NOT NULL,
+	IdenEsc INT FOREIGN KEY (IdenEsc) REFERENCES ATL.escalao(escalao) NOT NULL,
+	IdenTipoPag INT FOREIGN KEY (IdenTipoPag) REFERENCES ATL.tipoPag(id) NOT NULL
+);
+
+CREATE TABLE ATL.adulto(
+	NumCC INT PRIMARY KEY FOREIGN KEY (NumCC) REFERENCES ATL.pessoa(Numcc) NOT NULL,
+	telefone INT ,
+	Email VARCHAR(20)
+);
+CREATE TABLE ATL.relacao(
+	Id INT PRIMARY KEY NOT NULL,
+	designaçao VARCHAR(15)
+);
+
+CREATE TABLE ATL.encarregado(
+	AlunoCC INT PRIMARY KEY FOREIGN KEY (AlunoCC) REFERENCES ATL.aluno(NumCC) NOT NULL,
+	NumCC INT FOREIGN KEY (NumCC) REFERENCES ATL.adulto(NumCC) NOT NULL,
+	Iden INT FOREIGN KEY (Iden) REFERENCES ATL.relacao(Id) NOT NULL
+
+);
+CREATE TABLE ATL.pessoaaut(
+	AlunoCC INT PRIMARY KEY FOREIGN KEY (AlunoCC) REFERENCES ATL.aluno(NumCC) NOT NULL,
+	NumCC INT FOREIGN KEY (NumCC) REFERENCES ATL.adulto(NumCC) NOT NULL,
+	Iden INT FOREIGN KEY (Iden) REFERENCES ATL.relacao(Id) NOT NULL
+);
+CREATE TABLE ATL.atividade(
+	Id INT PRIMARY KEY NOT NULL,
+	
+);
+CREATE TABLE ATL.participanteatividade(
+	AlunoCC INT ,
+	
+	AtividadeId INT,
+	PRIMARY KEY (AlunoCC,AtividadeId),
+	FOREIGN KEY (AtividadeId) REFERENCES ATL.atividade(Id),
+	FOREIGN KEY (AlunoCC) REFERENCES ATL.aluno(NumCC) ,
+);
+CREATE TABLE ATL.nivelesc(
+	Nivel INT PRIMARY KEY NOT NULL,
+);
+CREATE TABLE ATL.professor(
+	Num INT PRIMARY KEY NOT NULL,
+	NumCC INT FOREIGN KEY (NumCC) REFERENCES ATL.adulto(NumCC) NOT NULL
+
+);
+CREATE TABLE ATL.turma(
+	id INT PRIMARY KEY NOT NULL,
+	anolet INT,
+	Designacao VARCHAR(15),
+	maxalunos INT,
+	NumFunc INT FOREIGN KEY (NumFunc) REFERENCES ATL.professor (Num) NOT NULL,
+	Nivel  INT FOREIGN KEY (Nivel) REFERENCES ATL.nivelesc (Nivel) NOT NULL
+);
+
+
+CREATE TABLE ATL.turmaatividade(
+	AtividadeId INT ,
+	
+	idturma INT,
+	
+	PRIMARY KEY (AtividadeId,idturma),
+	FOREIGN KEY (AtividadeId) REFERENCES ATL.atividade(Id) ,
+	FOREIGN KEY (idturma) REFERENCES ATL.turma(id)
+	);
